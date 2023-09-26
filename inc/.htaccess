@@ -1,0 +1,3 @@
+//The .htaccess file prevents direct access to the files in the inc directory. 
+//It’s relevant only to the Apache webserver.
+Deny from all
