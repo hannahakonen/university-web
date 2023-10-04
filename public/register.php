@@ -1,9 +1,11 @@
 <?php
+
 require __DIR__ . '/../src/bootstrap.php';
 require __DIR__ . '/../src/register.php';
 ?>
 
-<?php view('header', ['title' => 'Register']) ?>
+<?php //includes header.php
+view('header', ['title' => 'Register']) ?>
 
 <form action="register.php" method="post">
     <h1>Sign Up</h1>
