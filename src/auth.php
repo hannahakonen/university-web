@@ -1,4 +1,6 @@
 <?php
+//www.phptutorial.net + function send_activation_email modified with PHPMAILER
+//+ Jukan message-muotoilu
 /**
 * Register a user
 *
@@ -99,19 +101,23 @@ function send_activation_email(string $email, string $activation_code): void
 {
     // create the activation link
     $activation_link = APP_URL . "/activate.php?email=$email&activation_code=$activation_code";
+    //$activation_link = APP_URL . "/activate.php";  YHA NOT FOUND 
 
     // set email subject & body
     $subject = 'Please activate your account';
-    $message = <<<MESSAGE
-            Hi,
-            Please click the following link to activate your account:
-            $activation_link
-            MESSAGE;
+    
+    $message = "Hi,<br><br>";
+    $message.= "Please click the following link to activate your account:<br><br>";
+    $message.= "<a href='$activation_link'>Activation link</a>";
+    //$message.= "<br><br>t. t. $PALVELUOSOITE";
+
     // email header
     $header = "From:" . SENDER_EMAIL_ADDRESS;
 
     // send the email
-    mail($email, $subject, nl2br($message), $header);
+    //mail($email, $subject, nl2br($message), $header); 
+    //OMA MODAUS PHPMAILER: libs/mail.php:
+    send_email($email, $message, $subject);
 
 }
 
@@ -139,7 +145,7 @@ function find_unverified_user(string $activation_code, string $email)
     $statement->bindValue(':email', $email);
     $statement->execute();
 
-    $user = $statement->fetch(PDO::FETCH_ASSOC);
+    $user = $statement->fetch(PDO::FETCH_ASSOC);  //sis. hashed activation_code
 
     if ($user) {
         // already expired, delete the in active user with expired activation code

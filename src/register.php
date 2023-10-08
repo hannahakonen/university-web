@@ -1,5 +1,5 @@
 <?php
-
+//www.phptutorial.net
 if (is_user_logged_in()) {
     redirect_to('index.php');
 }
@@ -31,7 +31,7 @@ if (is_post_request()) {
 
     if ($errors) {
         redirect_with('register.php', [
-            'inputs' => escape_html($inputs),
+            'inputs' => escape_html($inputs),  //MIKA TILALLE?
             'errors' => $errors
         ]);
     }
