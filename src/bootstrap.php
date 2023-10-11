@@ -11,3 +11,4 @@ require_once __DIR__ . '/libs/filter.php';
 require_once __DIR__ . '/libs/connection.php';
 require_once __DIR__ . '/libs/mail.php';  //jos vahvistusmeili toimimaan
 require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/remember.php';

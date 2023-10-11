@@ -27,9 +27,9 @@ function register_user(string $email, string $username, string $password, string
     return $statement->execute();
 }
 
-function find_user_by_username(string $username)
+function find_user_by_username(string $username) //PUUTTUU id:n haku!!!!!!!!!!!!!!!!!!!!!! Lisätty
 {
-    $sql = 'SELECT username, password, active, email
+    $sql = 'SELECT id, username, password, active, email
             FROM users
             WHERE username=:username';
 
@@ -40,17 +40,19 @@ function find_user_by_username(string $username)
     return $statement->fetch(PDO::FETCH_ASSOC);
 }
 
-function login(string $username, string $password): bool
+function login(string $username, string $password, bool $remember = false): bool
 {
+
     $user = find_user_by_username($username);
 
+    // if user found, check the password
     if ($user && is_user_active($user) && password_verify($password, $user['password'])) {
-        // prevent session fixation attack
-        session_regenerate_id();
 
-        // set username in the session
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];
+        log_user_in($user);
+
+        if ($remember) {  //remember me checked
+            remember_me($user['id']);   //Miksi NULL, korjattu
+        }
 
         return true;
     }
@@ -58,9 +60,41 @@ function login(string $username, string $password): bool
     return false;
 }
 
-function is_user_logged_in(): bool
+/**
+ * log a user in
+ * @param array $user
+ * @return bool
+ */
+function log_user_in(array $user): bool
 {
-    return isset($_SESSION['username']);
+    // prevent session fixation attack
+    if (session_regenerate_id()) {
+        // set username & id in the session
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['user_id'] = $user['id'];
+        return true;
+    }
+
+    return false;
+}
+
+function remember_me(int $user_id, int $day = 30)
+{
+    [$selector, $validator, $token] = generate_tokens();
+
+    // remove all existing token associated with the user id
+    delete_user_token($user_id);
+
+    // set expiration date
+    $expired_seconds = time() + 60 * 60 * 24 * $day;
+
+    // insert a token to the database
+    $hash_validator = password_hash($validator, PASSWORD_DEFAULT);
+    $expiry = date('Y-m-d H:i:s', $expired_seconds);
+
+    if (insert_user_token($user_id, $selector, $hash_validator, $expiry)) {
+        setcookie('remember_me', $token, $expired_seconds);
+    }
 }
 
 function require_login(): void
@@ -72,11 +106,49 @@ function require_login(): void
 
 function logout(): void
 {
-    if (is_user_logged_in()) {
-        unset($_SESSION['username'], $_SESSION['user_id']);
+    if (is_user_logged_in()) { //true koska herjaa vasta seuraavasta:
+
+        // delete the user token
+        delete_user_token($_SESSION['user_id']); //MIKSI VÄLITTÄÄ NULL???????????????
+
+        // delete session
+        unset($_SESSION['username'], $_SESSION['user_id`']);
+
+        // remove the remember_me cookie
+        if (isset($_COOKIE['remember_me'])) {
+            unset($_COOKIE['remember_me']);
+            //setcookie('remember_user', null, -1);  // cookie eriniminen?
+            setcookie('remember_me', null, -1);
+            //setcookie('rememberme', null, -1, "", "", false, true); //jukka
+        }
+
+        // remove all session data
         session_destroy();
+
+        // redirect to the login page
         redirect_to('login.php');
     }
+}
+
+function is_user_logged_in(): bool
+{
+    // check the session
+    if (isset($_SESSION['username'])) {
+        return true;
+    }
+
+    // check the remember_me in cookie
+    $token = filter_input(INPUT_COOKIE, 'remember_me', FILTER_SANITIZE_STRING);
+
+    if ($token && token_is_valid($token)) {
+
+        $user = find_user_by_token($token);
+
+        if ($user) {
+            return log_user_in($user);
+        }
+    }
+    return false;
 }
 
 function current_user()
@@ -174,4 +246,3 @@ function activate_user(int $user_id): bool
 
     return $statement->execute();
 }
-

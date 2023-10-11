@@ -55,6 +55,7 @@ function sanitize(array $inputs, array $fields = [], int $default_filter = FILTE
 {
     if ($fields) {
         $options = array_map(fn($field) => $filters[$field], $fields);
+        //Warning: Undefined array key "string " in C:\xampp\htdocs\projects\projects_php\university-web\src\libs\sanitization.php on line 57
         $data = filter_var_array($inputs, $options);
     } else {
         $data = filter_var_array($inputs, $default_filter);
