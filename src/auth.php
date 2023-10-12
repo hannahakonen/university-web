@@ -322,30 +322,28 @@ function find_user_by_password_reset_code($password_reset_code) { //oma
     return null;
 }
 
-function delete_password_reset_code($user_id) { //oma muuta pdo
+function delete_password_reset_code($user_id) { //oma 
     $sql = 'DELETE FROM resetpassword_tokens 
             WHERE users_id=:user_id';
     
     $statement = db()->prepare($sql);
-    $statement->bindValue(':id', $user_id, PDO::PARAM_INT);
+    $statement->bindValue(':user_id', $user_id, PDO::PARAM_INT);
 
     return $statement->execute();
 }
 
-function change_password($user_id, $password) { //oma muuta pdo
+function change_password($user_id, $password) { //oma 
     $password = password_hash($password, PASSWORD_DEFAULT);
-    $query = "UPDATE users SET password = '$password' WHERE id = $user_id";
-}
 
-//malliksi
-function delete_user_by_id(int $id, int $active = 0)
-{
-    $sql = 'DELETE FROM users
-            WHERE id =:id and active=:active';
-
+    $sql = 'UPDATE users 
+            SET password=:password 
+            WHERE id=:user_id';
+    
     $statement = db()->prepare($sql);
-    $statement->bindValue(':id', $id, PDO::PARAM_INT);
-    $statement->bindValue(':active', $active, PDO::PARAM_INT);
+    $statement->bindValue(':password', $password);
+    $statement->bindValue(':user_id', $user_id, PDO::PARAM_INT);
 
-    return $statement->execute();
+    $statement->execute();
+
+    return delete_password_reset_code($user_id);
 }

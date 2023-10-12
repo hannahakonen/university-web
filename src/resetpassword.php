@@ -40,39 +40,16 @@ if (is_post_request()) {
         ]);
     }
     // Handle the form submission for changing the password
-    $password = $_POST['password'];
-
-    // Validate and update the password in your database
-    // ...
-    change_password(???)
-    // Display a message to the user
-    $message = "Password reset successful. You can now log in with your new password.";
-
-    //jukan modaa
-    if (empty($errors['password2']) and empty($errors['password'])) {
-        if ($_POST['password'] != $_POST['password2']) {
-            $errors['password2'] = $virheilmoitukset['password2']['customError'];
-            }
-        }
-        
-    debuggeri($errors);    
-    if (empty($errors)) {
-        $password = password_hash($password, PASSWORD_DEFAULT);
-        $query = "UPDATE users SET password = '$password' WHERE id = $users_id";
-        $result = $yhteys->query($query);
-        $muutettu = $yhteys->affected_rows;
-        }
+    if ($_POST['password'] == $_POST['password2']) {  //pitäisi olla jo tarkistettu
+        $password = $_POST['password'];
+        change_password($user_id, $password);
+        delete_password_reset_code($password_reset_code);
+    }
     
-    if ($muutettu) {
-        $query = "DELETE FROM resetpassword_tokens WHERE users_id = $users_id";
-        debuggeri($query);
-        $result = $yhteys->query($query);
-        $poistettu_token = $yhteys->affected_rows;
-        debuggeri("Poistettiin $poistettu_token token.");
-        /* Huom. tässä siirrytään suoraan kirjautumissivulle. */
-        header("location: login.php");
-        exit;
-        }
+    redirect_with_message(
+        'login.php',
+        'Password reset successful. You can now log in with your new password.'
+    );
 
 } else if (is_get_request()) {
     [$errors, $inputs] = session_flash('errors', 'inputs');
