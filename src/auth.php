@@ -109,8 +109,7 @@ function logout(): void
     if (is_user_logged_in()) { //true koska herjaa vasta seuraavasta:
 
         // delete the user token
-        delete_user_token($_SESSION['user_id']); //MIKSI VÄLITTÄÄ NULL???????????????
-
+        delete_user_token($_SESSION['user_id']); 
         // delete session
         unset($_SESSION['username'], $_SESSION['user_id`']);
 
@@ -245,4 +244,82 @@ function activate_user(int $user_id): bool
     $statement->bindValue(':id', $user_id, PDO::PARAM_INT);
 
     return $statement->execute();
+}
+
+function generate_password_reset_code(): string //OMA
+{
+    return bin2hex(random_bytes(50));
+}
+
+function find_user_email_exists_and_is_active($email) //OMA
+{
+    $sql = 'SELECT id FROM users WHERE email=:email AND active=1';  //toimii phpmyadmin
+
+    $statement = db()->prepare($sql);
+    $statement->bindValue(':email', $email);  //, PDO::PARAM_INT pois
+
+    $statement->execute(); //boolean
+    $id = $statement->fetch(PDO::FETCH_ASSOC); //array
+
+    return $id['id'];
+}
+
+function create_password_reset_code($email, $password_reset_code, int $expiry = 1 * 24  * 60 * 60){
+
+    $user_id = find_user_email_exists_and_is_active($email);
+
+    if (isset($user_id)){
+        $sql = 'INSERT INTO resetpassword_tokens(users_id, token, expiry)
+                VALUES(:users_id, :token, :expiry)';
+        $statement = db()->prepare($sql);
+
+        $statement->bindValue(':users_id', $user_id);
+        $statement->bindValue(':token', password_hash($password_reset_code, PASSWORD_DEFAULT));
+        $statement->bindValue(':expiry', date('Y-m-d H:i:s',  time() + $expiry));
+    
+        return $statement->execute();
+    }
+
+    return false;
+};
+
+/*function register_user(string $email, string $username, string $password, string $activation_code, int $expiry = 1 * 24  * 60 * 60, bool $is_admin = false): bool
+{
+    $sql = 'INSERT INTO users(username, email, password, is_admin, activation_code, activation_expiry)
+            VALUES(:username, :email, :password, :is_admin, :activation_code,:activation_expiry)';
+
+    $statement = db()->prepare($sql);
+
+    $statement->bindValue(':username', $username);
+    $statement->bindValue(':email', $email);
+    $statement->bindValue(':password', password_hash($password, PASSWORD_BCRYPT));
+    $statement->bindValue(':is_admin', (int)$is_admin, PDO::PARAM_INT);
+    $statement->bindValue(':activation_code', password_hash($activation_code, PASSWORD_DEFAULT));
+    $statement->bindValue(':activation_expiry', date('Y-m-d H:i:s',  time() + $expiry));
+
+    return $statement->execute();
+}*/
+
+function send_password_reset_email(string $email, string $password_reset_code): void //OMA muokkaa
+{
+    // create the reset link
+    $reset_link = APP_URL . "/resetpassword.php?password_reset_code=$password_reset_code";
+    //$activation_link = APP_URL . "/activate.php";  YHA NOT FOUND 
+
+    // set email subject & body
+    $subject = 'Change your password';
+    
+    $message = "Hi,<br><br>";
+    $message.= "Please click the following link to change the password:<br><br>";
+    $message.= "<a href='$reset_link'>Password reset link</a>";
+    //$message.= "<br><br>t. t. $PALVELUOSOITE";
+
+    // email header
+    $header = "From:" . SENDER_EMAIL_ADDRESS;
+
+    // send the email
+    //mail($email, $subject, nl2br($message), $header); 
+    //OMA MODAUS PHPMAILER: libs/mail.php:
+    send_email($email, $message, $subject);
+
 }

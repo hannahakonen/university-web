@@ -1,11 +1,9 @@
 <?php
-//NOT FOUND EDES ILMAN PARAM
+
 require __DIR__ . '/../src/bootstrap.php';
 
 if (is_get_request()) {
-
-    echo "plop";
-
+    
     // sanitize the email & activation code   ACTIVATION_CODE LINKISSA EI-HASHATTYNA, DB:SSA ON
     [$inputs, $errors] = filter($_GET, [
         'email' => 'string | required | email',

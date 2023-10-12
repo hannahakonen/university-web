@@ -1,9 +1,6 @@
 <?php
 
-//setcookie('remember_me', null, -1);  //MUISTA POISTAA, TESTI
-//setcookie('remember_me', null, -1, "", "", false, true); //MUISTA POISTAA, TESTI
-
-if (is_user_logged_in()) { //tämä antaa true vaikkei token db
+if (is_user_logged_in()) { 
     redirect_to('index.php');
 }
 
