@@ -283,23 +283,6 @@ function create_password_reset_code($email, $password_reset_code, int $expiry = 
     return false;
 };
 
-/*function register_user(string $email, string $username, string $password, string $activation_code, int $expiry = 1 * 24  * 60 * 60, bool $is_admin = false): bool
-{
-    $sql = 'INSERT INTO users(username, email, password, is_admin, activation_code, activation_expiry)
-            VALUES(:username, :email, :password, :is_admin, :activation_code,:activation_expiry)';
-
-    $statement = db()->prepare($sql);
-
-    $statement->bindValue(':username', $username);
-    $statement->bindValue(':email', $email);
-    $statement->bindValue(':password', password_hash($password, PASSWORD_BCRYPT));
-    $statement->bindValue(':is_admin', (int)$is_admin, PDO::PARAM_INT);
-    $statement->bindValue(':activation_code', password_hash($activation_code, PASSWORD_DEFAULT));
-    $statement->bindValue(':activation_expiry', date('Y-m-d H:i:s',  time() + $expiry));
-
-    return $statement->execute();
-}*/
-
 function send_password_reset_email(string $email, string $password_reset_code): void //OMA muokkaa
 {
     // create the reset link
@@ -321,5 +304,48 @@ function send_password_reset_email(string $email, string $password_reset_code): 
     //mail($email, $subject, nl2br($message), $header); 
     //OMA MODAUS PHPMAILER: libs/mail.php:
     send_email($email, $message, $subject);
+}
 
+function find_user_by_password_reset_code($password_reset_code) { //oma 
+    $sql = 'SELECT users_id, expiry > now() as valid
+            FROM resetpassword_tokens 
+            WHERE token=:password_reset_code'; 
+
+    $statement = db()->prepare($sql);
+    $statement->bindValue(':password_reset_code', $password_reset_code);  
+    $statement->execute(); //boolean
+    $user = $statement->fetch(PDO::FETCH_ASSOC); //array
+
+    if ($user && (int)$user['valid'] === 1) {
+        return $user['users_id'];
+    } 
+    return null;
+}
+
+function delete_password_reset_code($user_id) { //oma muuta pdo
+    $sql = 'DELETE FROM resetpassword_tokens 
+            WHERE users_id=:user_id';
+    
+    $statement = db()->prepare($sql);
+    $statement->bindValue(':id', $user_id, PDO::PARAM_INT);
+
+    return $statement->execute();
+}
+
+function change_password($user_id, $password) { //oma muuta pdo
+    $password = password_hash($password, PASSWORD_DEFAULT);
+    $query = "UPDATE users SET password = '$password' WHERE id = $user_id";
+}
+
+//malliksi
+function delete_user_by_id(int $id, int $active = 0)
+{
+    $sql = 'DELETE FROM users
+            WHERE id =:id and active=:active';
+
+    $statement = db()->prepare($sql);
+    $statement->bindValue(':id', $id, PDO::PARAM_INT);
+    $statement->bindValue(':active', $active, PDO::PARAM_INT);
+
+    return $statement->execute();
 }

@@ -15,14 +15,14 @@ if (is_post_request()) {
         'email' => 'email | required | email'  //tästä yksi email pois
     ]);
 
-    echo $inputs['email'];  //testi POISTA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     if ($errors) {
         redirect_with('forgotpassword.php', [
             'errors' => $errors, 
             'inputs' => $inputs
         ]);
     }
+
+    //TARKISTUS ONKO TOKENIA, JOS ON, VAIHDA SE, MUUTEN NORMI
 
     //tokenin luonti jne
     $password_reset_code = generate_password_reset_code();   
