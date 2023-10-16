@@ -17,16 +17,10 @@ if ($LOCAL) {
     define('DB_USER', $db_username_local);
     define('DB_PASSWORD', $db_password_local);
 
-//Azure
+//Azure EI TOIMI
 } elseif (strpos($_SERVER['HTTP_HOST'],"azurewebsites") !== false){
     $db_server = $_ENV['DB_HOST'] ?? getenv('DB_HOST');
     $db_username = $_ENV['DB_USER'] ?? getenv('DB_USER');
     $db_password = $_ENV['DB_PASSWORD'] ?? getenv('DB_PASSWORD');
 
 }
-
-/* Mailtrap */
-define("EMAIL_HOST",'smtp.mailtrap.io');
-define("EMAIL_PORT",2525);
-define("EMAIL_USERNAME",$username_mailtrap);
-define("EMAIL_PASSWORD",$password_mailtrap);

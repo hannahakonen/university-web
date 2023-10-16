@@ -1,6 +1,9 @@
 <?php
 //https://www.geeksforgeeks.org/how-to-send-an-email-using-phpmailer/
 //passwords from a hidden folder via database.php
+
+include __DIR__ . '/../../config/mailtrap.php'; //KORJAA???
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -23,14 +26,17 @@ function send_email($emailTo, $msg, $subject) {
         //$mail->SMTPDebug = 2;
         $mail->Timeout = 10;  //jukan
         $mail->isSMTP();
-        $mail->Host = "smtp.mailtrap.io"; //EMAIL_HOST;
+        //$mail->Host = "smtp.mailtrap.io"; //EMAIL_HOST;
+        $mail->Host = EMAIL_HOST; //mailtrap.php:stä
         $mail->SMTPAuth = true; //geeks
-        $mail->Username = "b0c3c20bfa097b"; //EMAIL_USERNAME, $username_mailtrap;
-        $mail->Password = "30556fb9581fdf"; //EMAIL_PASSWORD, $password_mailtrap;
+        //$mail->Username = "b0c3c20bfa097b"; //EMAIL_USERNAME, $username_mailtrap;
+        $mail->Username = EMAIL_USERNAME; //mailtrap.php:stä
+        //$mail->Password = "30556fb9581fdf"; //EMAIL_PASSWORD, $password_mailtrap;
+        $mail->Password = EMAIL_PASSWORD; //mailtrap.php:stä
         $mail->CharSet = 'UTF-8'; //jukka
         $mail->SMTPDebug = 0; // 0 = off (for production use) - 1 = client messages - 2 = client and server messages jukan
         $mail->SMTPSecure = 'tls';
-        $mail->Port = 2525; //EMAIL_PORT; mailtrap, sengrid 587
+        $mail->Port = EMAIL_PORT; //mailtrap.php:stä (sengrid 587)
         $mail->setFrom($emailFrom, $emailFromName); 
         $mail->addAddress($emailTo); //geeks
         $mail->addAddress($emailTo, $emailToName);
