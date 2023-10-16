@@ -364,6 +364,14 @@ th:last-child {
     overflow-x: initial;
   }
 }
+/*ope
+@media (min-width:767px) {
+  nav {flex-direction: row;}
+  nav a:not(:first-child) {display: inline; padding: 14px 16px;}    
+  nav .icon, #toggle-btn:checked ~ .close {display: none;}
+}
+*/
+
 .center {
   display: flex;
   flex-direction: column;

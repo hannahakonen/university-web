@@ -1,6 +1,6 @@
 <?php
 //https://www.geeksforgeeks.org/how-to-send-an-email-using-phpmailer/
-//TO BE MODIFIED?????
+//passwords from a hidden folder via database.php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 

@@ -6,6 +6,7 @@
  *
  * @return PDO
  */
+
 function db(): PDO
 {
     static $pdo;
