@@ -50,13 +50,12 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Contact
+                        Name
                     </a>
                     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">General Inquiry</a>
-                        <a class="dropdown-item" href="#">Customer Support</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Other Contacts</a>
+                        <a class="dropdown-item" href="__DIR__ . /../../public/contact.php">Give feedback</a>
+                        <div class="dropdown-divider">__DIR__ . /../../public/logout.php</div>
+                        <a class="dropdown-item" href="">Log out</a>
                     </div>
                 </li>
             </ul>
