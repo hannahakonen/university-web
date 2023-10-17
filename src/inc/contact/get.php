@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../src/bootstrap.php';
-require __DIR__ . '/../src/contact.php';
+//require __DIR__ . '/../../bootstrap.php';
+//require __DIR__ . '/../src/contact.php';//
 ?>
 
 <?php view('header', ['title' => 'Contact Form']) ?>

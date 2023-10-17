@@ -2,7 +2,7 @@
 //https://www.geeksforgeeks.org/how-to-send-an-email-using-phpmailer/
 //passwords from a hidden folder via database.php
 
-include __DIR__ . '/../../config/mailtrap.php'; //KORJAA???
+include __DIR__ . '/../../config/mailtrap.php'; 
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

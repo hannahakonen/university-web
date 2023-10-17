@@ -1,6 +1,7 @@
 <?php
-
-session_start();
+require __DIR__ . '/../src/bootstrap.php'; 
+$css='../css/contact.css';  //toimii sittenkin
+//session_start();
 
 $errors = [];
 $inputs = [];
@@ -20,14 +21,14 @@ if ($request_method === 'GET') {
         unset($_SESSION['inputs']);
     }
     // show the form
-    require_once __DIR__ . '/inc/get.php';
+    require_once __DIR__ . '/../src/inc/contact/get.php';
 } elseif ($request_method === 'POST') {
     // check the honeypot and validate the field
-    require_once __DIR__ . '/inc/post.php';
+    require_once __DIR__ . '/../src/inc/contact/post.php';
 
     if (!$errors) {
         // send an email
-        require_once __DIR__ . '/inc/mail.php';
+        require_once __DIR__ . '/../src/inc/contact/mail.php';
         // set the message
         $_SESSION['message'] =  'Thanks for contacting us! We will be in touch with you shortly.';
     } else {
@@ -35,6 +36,6 @@ if ($request_method === 'GET') {
         $_SESSION['inputs'] =   $inputs;
     }
 
-    header('Location: index.php', true, 303);
+    header('Location: index.php', true, 303); //index vaihdettu mutta menee silti sinne
     exit;
 }

@@ -2,6 +2,6 @@
 
 return [
     'mail' => [
-        'to_email' => 'webmaster@phptutorial.net'
+        'to_email' => 'opi@primea.fi'
     ]
 ];
