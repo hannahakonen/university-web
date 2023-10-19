@@ -1,8 +1,8 @@
 <?php
 //jukalla alussa
-if (!session_id())
-    session_start();
-ini_set('default_charset', 'utf-8');
+//if (!session_id())
+//    session_start();
+//ini_set('default_charset', 'utf-8');
 ?>
 
 <!DOCTYPE html>
@@ -17,30 +17,26 @@ ini_set('default_charset', 'utf-8');
 -->
 
     <!--phptutorial.net-->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/phptutorial.css">
     <!--<link rel="stylesheet" href="https://www.phptutorial.net/app/css/style.css">-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+DW+Pica&display=swap">
-    <link rel="stylesheet" href="logo.css">
-    <?php if (isset($css)) echo "<link rel='stylesheet' href='$css'>"; //toimii sittenkin? ?>
-
+    <link rel="stylesheet" href="css/style.css">
+    <?php if (isset($css)) echo "<link rel='stylesheet' href='$css'>"; ?>
+    <style>
+        
+    </style>
     <title>
         <?= $title ?? 'Home' ?>
     </title>
-        <style>
-        <!--.custom-font {
-            font-family: 'IM Fell DW Pica', serif;
-            font-size: 1.5rem;
-        }-->
-        <!--.user-cannot-see {
-            display: none
-        }-->
-    </style>
+    <!-- Include jQuery for ajax query-->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 </head>
 
 <body>
+    <?php $logged_in = isset($_SESSION['username']); ?>
 
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark" style='background-color: #594958;'>
         <a class="navbar-brand custom-font" href="#">Primea</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,31 +50,44 @@ ini_set('default_charset', 'utf-8');
                 <li class="nav-item">
                     <a class="nav-link" href="#">Search</a>
                 </li>
+                <?php if ($logged_in) {
+                    echo "<li class='nav-item'>
+                        <a class='nav-link' href=''>Registration</a>
+                    </li>";
+                    echo "<li class='nav-item'>
+                        <a class='nav-link' href='student.php'>Front page</a>
+                    </li>";
+                } ?>
+
             </ul>
             <!-- Push "Contact" link to the right -->
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="login.php">Login</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <?php if (!$logged_in) {
+                    echo "<li class='nav-item'>
+                        <a class='nav-link' href='login.php'>Login</a>
+                </li>";
+                } else {
+                    echo "<li class='nav-item dropdown'>
+                    <a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button'
+                        data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
                         Name
                     </a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="contact.php">Give feedback</a>
-                        <div class="dropdown-divider">logout.php</div>
-                        <a class="dropdown-item" href="">Log out</a>
+                    <div class='dropdown-menu dropdown-menu-end' aria-labelledby='navbarDropdown'>
+                        <a class='dropdown-item' href='contact.php'>Give feedback</a>
+                        <div class='dropdown-divider'></div>
+                        <a class='dropdown-item' href='logout.php'>Log out</a>
                     </div>
-                </li>
+                </li>";
+                } ?>
             </ul>
         </div>
     </nav>
 
     <!-- Bootstrap JS (and Popper.js) -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.8/dist/umd/popper.min.js"
+    <!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.8/dist/umd/popper.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
+            -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>

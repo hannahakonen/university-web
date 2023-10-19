@@ -1,0 +1,12 @@
+.custom-font {
+    font-family: 'IM Fell DW Pica', serif;
+    font-size: 1.5rem;
+}
+
+.custom-navbar {
+    background-color: #594958;
+}
+/*tämä contact.php:stä, välillä toimii välillä ei*/
+.user-cannot-see {
+    display: none
+}

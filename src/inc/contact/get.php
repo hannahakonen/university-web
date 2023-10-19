@@ -45,6 +45,7 @@
     </label>
 
     <button type="submit">Send Message</button>
+    <a href="student.php"><br>Cancel</a>
 </form>
 
 <?php view('footer') ?>

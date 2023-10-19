@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../src/bootstrap.php'; 
-$css='../css/contact.css';  //toimii sittenkin
+$css = 'css/contact.css';  //ei toimi 
 //session_start();
 
 $errors = [];
