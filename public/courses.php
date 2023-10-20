@@ -1,12 +1,15 @@
 <?php
 require __DIR__ . '/../src/bootstrap.php';
-function find_courses_selected_by_username(string $username)
+
+//Tämä kurssi-ilmo apufileen
+//TÄHÄN VIELÄ TARKISTUS ETTÄ COURSES_SELECTED_BY REGISTERED=0!!!!!!!!!!!!!!!!!
+function courses_selected_by_username(string $username)
 {
     $sql = 'SELECT courses.name
             FROM courses
             JOIN courses_selected_by ON courses.id = courses_selected_by.course_id
             JOIN users ON users.id = courses_selected_by.user_id
-            WHERE users.username=:username'; //muuta tähän $username!!!!!!!!!!!!!!!!!!!!!!
+            WHERE users.username=:username AND courses_selected_by.registered=0';
             
     $statement = db()->prepare($sql);
     $statement->bindValue(':username', $username); // "hannahakonen"
@@ -18,7 +21,7 @@ function find_courses_selected_by_username(string $username)
     // Convert the result to JSON
     return json_encode($data);
 }
-
+//TÄMÄ IHAN TURHA?
 // Handle the AJAX request 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //session_start();//tarviiko??????????????????????????????
@@ -26,5 +29,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_SESSION['username'];//tai $_SESSION['username'];
 
     // Call your function and echo the result
-    echo find_courses_selected_by_username($username);
+    echo courses_selected_by_username($username);
 }
