@@ -1,8 +1,24 @@
 <?php
-require __DIR__ . '/../src/bootstrap.php';
+//require __DIR__ . '/../src/bootstrap.php';
 
 //Tämä kurssi-ilmo apufileen
-//TÄHÄN VIELÄ TARKISTUS ETTÄ COURSES_SELECTED_BY REGISTERED=0!!!!!!!!!!!!!!!!!
+
+//courses selected but not registered by user
+$username = $_SESSION['username'];
+$sql = 'SELECT courses.name
+            FROM courses
+            JOIN courses_selected_by ON courses.id = courses_selected_by.course_id
+            JOIN users ON users.id = courses_selected_by.user_id
+            WHERE users.username=:username AND courses_selected_by.registered=0';
+            
+    $statement = db()->prepare($sql);
+    $statement->bindValue(':username', $username); // "hannahakonen"
+    $statement->execute();
+
+    //// Fetch all rows as an associative array
+    $selected_courses=$statement->fetchAll(PDO::FETCH_ASSOC);
+
+//TÄMÄ TURHA???? KÄYTÄ REGISTERED-LISTAAN
 function courses_selected_by_username(string $username)
 {
     $sql = 'SELECT courses.name

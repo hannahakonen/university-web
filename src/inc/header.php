@@ -63,14 +63,16 @@
             <!-- Push "Contact" link to the right -->
             <ul class="navbar-nav ms-auto">
                 <?php if (!$logged_in) {
+                    
                     echo "<li class='nav-item'>
                         <a class='nav-link' href='login.php'>Login</a>
                 </li>";
                 } else {
+                    $username = $_SESSION['username'];
                     echo "<li class='nav-item dropdown'>
                     <a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button'
                         data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                        Name
+                        $username
                     </a>
                     <div class='dropdown-menu dropdown-menu-end' aria-labelledby='navbarDropdown'>
                         <a class='dropdown-item' href='contact.php'>Give feedback</a>

@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../src/bootstrap.php';
-//require __DIR__ . '/student2.php';//tarviiko?????
+require __DIR__ . '/selected-courses.php';
+require __DIR__ . '/enrolled-courses.php';
 require_login();
 ?>
 
@@ -12,7 +13,6 @@ require_login();
     <div class="row">
         <div class="col-sm-6">
             <h3>Courses in the study plan</h3>
-            <h4>tähän EI voi palautua jo rekisteröidyt!!!</h4>
             <!-- Placeholder for the list -->
             <div class="col-sm">
                 <ul id="itemList"></ul>
@@ -24,36 +24,19 @@ require_login();
 
         <div class="col-sm-6" id="targetColumn">
             <h3>Course registrations</h3>
-            <h4>tähän rekisteröidyt tietokannasta pysyvästi+cancel-mahd, reg button -> cancel</h4>
-   
+            <div id="registeredCourseCards" class="registered-card-deck"></div>
         </div>
     </div>
 
 </div>
 
 <script>
-    //TARVITAANKO TÄSSÄ AJAXIA???????????????????????????
-    // Function to fetch course names via AJAX
-    function fetchCourseNames() {
-        // Make an AJAX request to your PHP script
-        $.ajax({
-            url: "courses.php", // Adjust the path accordingly "__DIR__ . '/../src/libs/courses.php"
-            method: 'POST',
-            //data: { username: username },
-            dataType: 'json',
-            success: function (response) {
-                // Call a function to update the HTML content
-                updateList(response);
-            },
-            error: function (error) {
-                console.error('Error fetching data:', error);
-            }
-        });
-    }
+    
+    updateLists();
 
     // Function to update the card list
-    function updateList(items) {
-        const courseCards = document.getElementById('courseCards');
+    function updateList(items, id, buttonText) {
+        const courseCards = document.getElementById(id); //courseCards
 
         // Clear existing content
         courseCards.innerHTML = '';
@@ -72,12 +55,12 @@ require_login();
 
             const addButton = document.createElement('button');
             addButton.className = 'btn btn-primary';
-            addButton.textContent = 'Register'; // Customize button text as needed
+            addButton.textContent = buttonText; // Customize button text as needed
 
             // You can add an event listener to the button if you want to handle clicks
             addButton.addEventListener('click', function () {
                 // Add your logic here when the button is clicked
-                register(item.name); //USERNAME PUUTTUU!!!!!!!!!!!!!!!!!!!
+                register(item.name, buttonText);
                 console.log('Enroll button clicked for:', item.name);
             });
 
@@ -89,63 +72,74 @@ require_login();
         });
     }
 
+    function updateLists() {
+        //Courses to study plan
+        var selectedCourses = <?php echo json_encode($selected_courses); ?>;  //from selected-courses.php
+        updateList(selectedCourses, 'courseCards', 'Register');
+        //Courses to reg courses
+        var enrolledCourses = <?php echo json_encode($enrolled_courses); ?>;  //from enrolled-courses.php
+        updateList(enrolledCourses, 'registeredCourseCards', 'Cancel registration');
+    }
 
-    // Function to update the list
-    /*function updateList(items) {
-        // Get the placeholder element
-        const itemList = document.getElementById('itemList');
-
-        // Clear existing content
-        itemList.innerHTML = '';
-
-        // Loop through the items and create list items
-        items.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item.name; // Assuming 'name' is the key in the returned data
-            itemList.appendChild(li);
+    // Function to fetch course names via AJAX, not used
+    function fetchCourseNames() {
+        // Make an AJAX request to your PHP script
+        $.ajax({
+            url: "courses.php", // Adjust the path accordingly "__DIR__ . '/../src/libs/courses.php"
+            method: 'POST',
+            //data: { username: username },
+            dataType: 'json',
+            success: function (response) {
+                // Call a function to update the HTML content
+                updateList(response);
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
         });
-    }*/
+    }
 
     // Call the function to fetch and display course names
-    fetchCourseNames();
-</script>
+    //fetchCourseNames();
 
-<script>
-function register(courseName) {//, username
-    // Make an AJAX request to the PHP script
-    $.ajax({
-        url: 'enroll.php', // Adjust the path accordingly
-        method: 'POST',
-        data: { courseName: courseName }, //, username: username
-        success: function (response) {
-            // Handle the success response if needed
-            console.log('Enrollment successful');
-        },
-        error: function (error) {
-            console.error('Error enrolling:', error);
+    function register(courseName, buttonText) {//, username
+        // Make an AJAX request to the PHP script
+        $.ajax({
+            url: 'enroll.php', // Adjust the path accordingly
+            method: 'POST',
+            data: { courseName: courseName, buttonText: buttonText }, //, username: username
+            success: function (response) {
+                // Handle the success response if needed
+                console.log('Enrollment successful');
+            },
+            error: function (error) {
+                console.error('Error enrolling:', error);
+            }
+        });
+        //JATKON MUOKKAUS NIIN ETTÄ POISTO PLANISTA JA REKISTERÖITYJEN KURSSIEN HAKU (AJAX+PHP) 
+        //JA LISTA REKISTERÖITYIHIN 
+
+        //TARVITAAN YHÄ???????????????
+
+        // Find the card element with the specific course name
+        
+        const cards = document.querySelectorAll('.card');
+        const cardElement = Array.from(cards).find(card => card.querySelector('.card-title').textContent === courseName);
+
+        if (cardElement) {
+            // Clone the card
+            const clonedCard = cardElement.cloneNode(true);
+
+            // Remove the original card from its column
+            cardElement.parentNode.removeChild(cardElement);
+
+            // Append the cloned card to the target column
+            document.getElementById('targetColumn').appendChild(clonedCard);
         }
-    });
-    // Find the card element with the specific course name
-    const cards = document.querySelectorAll('.card');
-    const cardElement = Array.from(cards).find(card => card.querySelector('.card-title').textContent === courseName);
-
-    if (cardElement) {
-        // Clone the card
-        const clonedCard = cardElement.cloneNode(true);
-
-        // Remove the original card from its column
-        cardElement.parentNode.removeChild(cardElement);
-
-        // Append the cloned card to the target column
-        document.getElementById('targetColumn').appendChild(clonedCard);
+        location.reload();  //lataa koko sivun, mikä ei ole tarkoitus, pitäisi olla dynaaminen!!!!!!!!!!!!!!!
     }
-}
+    
+
 </script>
 
-<?php
-
-//echo "<h3> PHP List All Session Variables</h3>";
-//foreach ($_SESSION as $key => $val)
-//    echo $key . " " . $val . "<br/>";
-?>
 <?php view('footer') ?>
