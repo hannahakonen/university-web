@@ -22,7 +22,7 @@ function enroll_user($courseName) //, $username
     // Perform the database update logic here
     // ...
     $registered = 1;
-    $username = $_SESSION['username'];//?????????????
+    $username = $_SESSION['username'];
     $user = find_user_by_username($username);
     $user_id = $user['id'];
     $course_id = course_id_by_name($courseName);

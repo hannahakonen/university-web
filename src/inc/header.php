@@ -45,17 +45,18 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.php">OPI <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="index.php">OPI</a>
+                    <!--<a class="nav-link" href="index.php">OPI <span class="sr-only">(current)</span></a>-->
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Search</a>
+                    <a class="nav-link disabled" href="">Search</a>
                 </li>
                 <?php if ($logged_in) {
                     echo "<li class='nav-item'>
-                        <a class='nav-link' href=''>Registration</a>
+                        <a class='nav-link' href='enrolments.php'>Registration</a>
                     </li>";
                     echo "<li class='nav-item'>
-                        <a class='nav-link' href='student.php'>Front page</a>
+                        <a class='nav-link' href='frontpage.php'>Front page</a>
                     </li>";
                 } ?>
 
