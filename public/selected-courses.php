@@ -18,7 +18,10 @@ $sql = 'SELECT courses.name
     //// Fetch all rows as an associative array
     $selected_courses=$statement->fetchAll(PDO::FETCH_ASSOC);
 
-//TÄMÄ TURHA???? KÄYTÄ REGISTERED-LISTAAN
+
+
+    
+//TÄMÄ TURHA???? KÄYTÄ REGISTERED-LISTAAN (registered=1)
 function courses_selected_by_username(string $username)
 {
     $sql = 'SELECT courses.name

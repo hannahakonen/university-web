@@ -7,22 +7,20 @@ require_login();
 
 <?php view('header', ['title' => 'Dashboard']) ?>
 <h2>Registration
-    <?= current_user() ?>
 </h2>
 <div class="container">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-6" id="selectedColumn">
             <h3>Courses in the study plan</h3>
             <!-- Placeholder for the list -->
             <div class="col-sm">
                 <ul id="itemList"></ul>
             </div>
-
             <div id="courseCards" class="card-deck"></div>
 
         </div>
 
-        <div class="col-sm-6" id="targetColumn">
+        <div class="col-sm-6" id="registeredColumn">
             <h3>Course registrations</h3>
             <div id="registeredCourseCards" class="registered-card-deck"></div>
         </div>
@@ -31,13 +29,12 @@ require_login();
 </div>
 
 <script>
-    
+
     updateLists();
 
     // Function to update the card list
     function updateList(items, id, buttonText) {
-        const courseCards = document.getElementById(id); //courseCards
-
+        const courseCards = document.getElementById(id); //div id
         // Clear existing content
         courseCards.innerHTML = '';
 
@@ -59,8 +56,7 @@ require_login();
 
             // You can add an event listener to the button if you want to handle clicks
             addButton.addEventListener('click', function () {
-                // Add your logic here when the button is clicked
-                register(item.name, buttonText);
+                register(item.name, buttonText); 
                 console.log('Enroll button clicked for:', item.name);
             });
 
@@ -81,64 +77,73 @@ require_login();
         updateList(enrolledCourses, 'registeredCourseCards', 'Cancel registration');
     }
 
-    // Function to fetch course names via AJAX, not used
-    function fetchCourseNames() {
-        // Make an AJAX request to your PHP script
-        $.ajax({
-            url: "courses.php", // Adjust the path accordingly "__DIR__ . '/../src/libs/courses.php"
-            method: 'POST',
-            //data: { username: username },
-            dataType: 'json',
-            success: function (response) {
-                // Call a function to update the HTML content
-                updateList(response);
-            },
-            error: function (error) {
-                console.error('Error fetching data:', error);
-            }
-        });
-    }
-
-    // Call the function to fetch and display course names
-    //fetchCourseNames();
-
-    function register(courseName, buttonText) {//, username
+    function register(courseName, buttonText) {
         // Make an AJAX request to the PHP script
+
         $.ajax({
-            url: 'enroll.php', // Adjust the path accordingly
+            url: 'enroll.php',
             method: 'POST',
-            data: { courseName: courseName, buttonText: buttonText }, //, username: username
+            data: { courseName: courseName, buttonText: buttonText },
             success: function (response) {
                 // Handle the success response if needed
                 console.log('Enrollment successful');
+
+                //KOKEILU TÄHÄN VÄLIIN LOPPUOSA
+                // Find the card element with the specific course name
+
+                const cards = document.querySelectorAll('.card');
+                const cardElement = Array.from(cards).find(card => card.querySelector('.card-title').textContent === courseName);
+
+                if (cardElement) {
+                    // Clone the card
+                    var clonedCard = cardElement.cloneNode(true);
+
+                    // Get the parent div of the card
+                    //const parentDiv = cardElement.parentNode;
+                    // Get the ID of the parent div
+                    //const parentId = parentDiv.id; // ei toimi
+
+                    //console.log(parentId);
+
+                    // Remove the original card from its column
+                    cardElement.parentNode.removeChild(cardElement);
+
+                    //Button for the text change
+                    //var buttonElement = cardElement.querySelector('button');
+                    var buttonElement = clonedCard.querySelector('button');
+
+                    console.log(buttonElement.textContent);
+
+                    // Append the cloned card to the target column 
+                    if (buttonElement.textContent == 'Register') {
+                        console.log('target reg');
+                        
+                        document.getElementById('registeredColumn').appendChild(clonedCard);
+
+                        buttonElement.textContent = 'Cancel registration';
+                        console.log('Button Text After:', buttonElement.textContent);
+
+                    } else if (buttonElement.textContent == 'Cancel registration') {
+                        console.log('target sel');
+                        
+                        document.getElementById('selectedColumn').appendChild(clonedCard);
+
+                        buttonElement.textContent = 'Register';
+                        console.log('Button Text After:', buttonElement.textContent);
+
+                    }
+                }
+                location.reload();  //lataa koko sivun, mikä ei ole tarkoitus, pitäisi olla dynaaminen!!!!!!!!!!!!!!!
+
+
             },
             error: function (error) {
                 console.error('Error enrolling:', error);
             }
         });
-        //JATKON MUOKKAUS NIIN ETTÄ POISTO PLANISTA JA REKISTERÖITYJEN KURSSIEN HAKU (AJAX+PHP) 
-        //JA LISTA REKISTERÖITYIHIN 
 
-        //TARVITAAN YHÄ???????????????
-
-        // Find the card element with the specific course name
-        
-        const cards = document.querySelectorAll('.card');
-        const cardElement = Array.from(cards).find(card => card.querySelector('.card-title').textContent === courseName);
-
-        if (cardElement) {
-            // Clone the card
-            const clonedCard = cardElement.cloneNode(true);
-
-            // Remove the original card from its column
-            cardElement.parentNode.removeChild(cardElement);
-
-            // Append the cloned card to the target column
-            document.getElementById('targetColumn').appendChild(clonedCard);
-        }
-        location.reload();  //lataa koko sivun, mikä ei ole tarkoitus, pitäisi olla dynaaminen!!!!!!!!!!!!!!!
     }
-    
+
 
 </script>
 

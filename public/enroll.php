@@ -1,6 +1,5 @@
 <?php
 require __DIR__ . '/../src/bootstrap.php';
-// Include your database connection file or configure the database connection here
 //include_once 'db_connection.php';
 
 function course_id_by_name($courseName)
@@ -13,7 +12,7 @@ function course_id_by_name($courseName)
     $statement->bindValue(':name', $courseName);
     $statement->execute();
 
-    $id = $statement->fetch(PDO::FETCH_ASSOC);  //ONKO OIKEA MUOTO????
+    $id = $statement->fetch(PDO::FETCH_ASSOC);
     return $id['id'];
 }
 
