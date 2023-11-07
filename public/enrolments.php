@@ -6,10 +6,13 @@ require_login();
 ?>
 
 <?php view('header', ['title' => 'Dashboard']) ?>
-<h2>Registration
-</h2>
+
 <div class="container">
     <div class="row">
+        <h2>Registration
+        </h2>
+    </div>
+    <div class="row" style='background-color: white'>
         <div class="col-sm-6" id="selectedColumn">
             <h3>Courses in the study plan</h3>
             <!-- Placeholder for the list -->
@@ -56,7 +59,7 @@ require_login();
 
             // You can add an event listener to the button if you want to handle clicks
             addButton.addEventListener('click', function () {
-                register(item.name, buttonText); 
+                register(item.name, buttonText);
                 console.log('Enroll button clicked for:', item.name);
             });
 
@@ -117,7 +120,7 @@ require_login();
                     // Append the cloned card to the target column 
                     if (buttonElement.textContent == 'Register') {
                         console.log('target reg');
-                        
+
                         document.getElementById('registeredColumn').appendChild(clonedCard);
 
                         buttonElement.textContent = 'Cancel registration';
@@ -125,7 +128,7 @@ require_login();
 
                     } else if (buttonElement.textContent == 'Cancel registration') {
                         console.log('target sel');
-                        
+
                         document.getElementById('selectedColumn').appendChild(clonedCard);
 
                         buttonElement.textContent = 'Register';
@@ -133,9 +136,8 @@ require_login();
 
                     }
                 }
-                location.reload();  //lataa koko sivun, mikä ei ole tarkoitus, pitäisi olla dynaaminen!!!!!!!!!!!!!!!
-
-
+                //location.reload();  //lataa koko sivun, mikä ei ole tarkoitus, pitäisi olla dynaaminen!!!!!!!!!!!!!!!
+                
             },
             error: function (error) {
                 console.error('Error enrolling:', error);

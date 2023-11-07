@@ -8,7 +8,7 @@ require_login();
 
 <div class="container">
 <div class="row"><h2>Front page</h2></div>
-    <div class="row">
+    <div class="row" style='background-color: white'>
         <div class="col" id="selectedColumn">
             <h3>Newest messages</h3>
             <div></div>

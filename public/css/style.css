@@ -1,12 +1,77 @@
+:root {
+    --primary: #7952b3;
+    --secondary: #61428f;
+    --border-color: #dee2e6;
+    --max-width: 1140px;
+    --border-radius: 0.25rem;
+    --button-text: #fff;
+    --button-focus: 0 0 0 3px rgba(121, 82, 179, 0.25);
+    --link-color: #7952b3;
+    --text-main: #363636;
+    --text-bright: #000;
+    --body-bg-color: #f9fafb;
+    --footer-bg-color: #fff;
+    --form-bg-color: #fff;
+    --input-text-color: #000;
+    --input-text-disabled: #7a7a7a;
+    --input-placeholder-color: #c2c2c2;
+    --input-border-color: #ccc;
+    --input-background-color: #fff;
+    --input-disabled: #f5f5f5;
+    --input-focus: 0 0 0 3px rgba(121, 82, 179, 0.25);
+    --error: #dc3545;
+    --success: #198754;
+    --warning: #664d03;
+    --info: #0c5460;
+    --alert-error-bg: #f8d7da;
+    --alert-warning-bg: #fff3cd;
+    --alert-success-bg: #d4edda;
+    --alert-info-bg: #d1ecf1;
+  }
+
 .custom-font {
     font-family: 'IM Fell DW Pica', serif;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 }
 
-.custom-navbar {
+nav {
     background-color: #594958;
 }
 /*tämä contact.php:stä, välillä toimii välillä ei*/
 .user-cannot-see {
     display: none
 }
+
+html, body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    
+    /*margin: 0;*/
+    height: 100vh; /* 100% of the viewport height */
+}
+
+/* Other styles for your content */
+main {
+    flex: 1; /* Allow the main content to grow and fill the available space */
+    
+}
+
+body {
+    display: flex;
+    
+    flex: 1;
+}
+
+.container {
+    display: flex; /* or inline-flex */
+    justify-content: center;
+  }
+
+  form {
+    margin: 1rem auto;
+    border: solid 1px var(--border-color);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    background-color: var(--form-bg-color);
+  }

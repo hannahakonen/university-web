@@ -11,12 +11,12 @@ require __DIR__ . '/../src/login.php';
         <?= $errors['login'] ?>
     </div>
 <?php endif ?>
-
+<div class="container">
 <form action="login.php" method="post">
     <h1>Login</h1>
     <div>
         <label for="username">Username:</label>
-        <input type="text" name="username" id="username" value="<?= $inputs['username'] ?? '' ?>">
+        <input type="text" class="form-control" name="username" id="username" value="<?= $inputs['username'] ?? '' ?>">
         <small>
             <?= $errors['username'] ?? '' ?>
         </small>
@@ -24,7 +24,7 @@ require __DIR__ . '/../src/login.php';
 
     <div>
         <label for="password">Password:</label>
-        <input type="password" name="password" id="password">
+        <input type="password" class="form-control" name="password" id="password">
         <small>
             <?= $errors['password'] ?? '' ?>
         </small>
@@ -41,12 +41,12 @@ require __DIR__ . '/../src/login.php';
     </div>
 
     <section>
-        <button type="submit">Login</button>
+        <button type="submit" class="btn btn-primary">Login</button>
         <a href="register.php">Register</a>
         <!-- omaa -->
         <a href="forgotpassword.php">Password forgotten?</a> 
     </section>
 
 </form>
-
+<div>
 <?php view('footer') ?>
